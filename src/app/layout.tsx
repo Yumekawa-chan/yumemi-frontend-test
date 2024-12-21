@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${dotGothic16.className}`}
+        className={`${dotGothic16.className}  bg-gradient-to-r from-pink-100 to-blue-100`}
       >
         {children}
       </body>
