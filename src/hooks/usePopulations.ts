@@ -3,10 +3,23 @@ import { fetchPopulationData } from '@/hooks/api';
 import { Prefecture } from '@/types/prefecture';
 import { Population } from '@/types/population';
 
+interface PrefectureColor {
+  name: string;
+  color: string;
+}
+
 interface PopulationGraphData {
   year: number;
   [prefName: string]: number;
 }
+
+/**
+ * 都道府県ごとの人口データを取得する
+ * @param selectedPrefectures 選択された都道府県名の配列
+ * @param prefectures 都道府県データの配列
+ * @param selectedPattern 表示する人口データの種類
+ * @returns 人口データと色情報
+ */
 
 export function usePopulations(
   selectedPrefectures: string[],
@@ -14,9 +27,11 @@ export function usePopulations(
   selectedPattern: string
 ): {
   data: PopulationGraphData[];
+  colorMap: Record<string, string>;
   error: string | null;
 } {
   const [data, setData] = useState<PopulationGraphData[]>([]);
+  const [colorMap, setColorMap] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -67,6 +82,20 @@ export function usePopulations(
           });
         });
         setData(Object.values(merged).sort((a, b) => a.year - b.year));
+
+        const colorResponse = await fetch('./prefectureColors.json', {
+          signal,
+        });
+        const colors: PrefectureColor[] = await colorResponse.json();
+        setColorMap(
+          colors.reduce(
+            (acc, { name, color }) => ({
+              ...acc,
+              [name]: color,
+            }),
+            {}
+          )
+        );
       } catch (err) {
         if (signal.aborted) return;
         console.error('データの読み込み中にエラーが発生しました:', err);
@@ -81,5 +110,5 @@ export function usePopulations(
     };
   }, [selectedPrefectures, prefectures, selectedPattern]);
 
-  return { data, error };
+  return { data, colorMap, error };
 }
