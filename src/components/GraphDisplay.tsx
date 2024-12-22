@@ -11,19 +11,14 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const GraphDisplay: React.FC = () => {
-  const data = [
-    { year: 1980, Tokyo: 1000000, Osaka: 800000 },
-    { year: 1990, Tokyo: 1200000, Osaka: 900000 },
-    { year: 2000, Tokyo: 1400000, Osaka: 1000000 },
-    { year: 2010, Tokyo: 1600000, Osaka: 1100000 },
-    { year: 2020, Tokyo: 1800000, Osaka: 1200000 },
-  ];
+interface GraphDisplayProps {
+  data: { year: number; [key: string]: number }[];
+  colorMap: Record<string, string>;
+}
 
-  const colorMap: Record<string, string> = {
-    Tokyo: '#FF0000',
-    Osaka: '#0000FF',
-  };
+const GraphDisplay: React.FC<GraphDisplayProps> = ({ data, colorMap }) => {
+  const keys =
+    data.length > 0 ? Object.keys(data[0]).filter((key) => key !== 'year') : [];
 
   return (
     <div className="bg-pink-100 border-pink-500 border rounded-lg shadow-lg pt-2 w-full">
@@ -67,11 +62,11 @@ const GraphDisplay: React.FC = () => {
             }
           />
           <Legend />
-          {Object.keys(colorMap).map((key) => (
+          {keys.map((key) => (
             <Line
               key={key}
               dataKey={key}
-              stroke={colorMap[key]}
+              stroke={colorMap[key] || '#CCCCCC'}
               strokeWidth={2}
             />
           ))}
