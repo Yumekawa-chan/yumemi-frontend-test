@@ -9,6 +9,7 @@ import { useState } from 'react';
 
 const Page: React.FC = () => {
   const [selectedPrefectures, setSelectedPrefectures] = useState<string[]>([]);
+  const [selectedPattern, setSelectedPattern] = useState('総人口');
   const { loading: prefecturesLoading, error: prefectureError } =
     usePrefectures();
   const loading = prefecturesLoading;
@@ -24,7 +25,11 @@ const Page: React.FC = () => {
         selectedPrefectures={selectedPrefectures}
         setSelectedPrefectures={setSelectedPrefectures}
       />
-      <ItemSection setSelectedPrefectures={setSelectedPrefectures} />
+      <ItemSection
+        setSelectedPrefectures={setSelectedPrefectures}
+        selectedPattern={selectedPattern}
+        setSelectedPattern={setSelectedPattern}
+      />
       <GraphDisplay />
     </div>
   );
