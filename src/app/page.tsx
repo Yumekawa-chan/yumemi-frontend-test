@@ -24,7 +24,7 @@ const Page: React.FC = () => {
         selectedPrefectures={selectedPrefectures}
         setSelectedPrefectures={setSelectedPrefectures}
       />
-      <ItemSection />
+      <ItemSection setSelectedPrefectures={setSelectedPrefectures} />
       <GraphDisplay />
     </div>
   );

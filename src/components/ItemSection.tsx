@@ -1,10 +1,16 @@
 import ResetButton from '@/components/items/ResetButton';
 import PopulationFilter from '@/components/items/PopulationFilter';
 
-const ItemSection: React.FC = () => {
+interface ItemSectionProps {
+  setSelectedPrefectures: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+const ItemSection: React.FC<ItemSectionProps> = ({
+  setSelectedPrefectures,
+}) => {
   return (
     <div className="flex gap-4">
-      <ResetButton />
+      <ResetButton setSelectedPrefectures={setSelectedPrefectures} />
       <PopulationFilter />
     </div>
   );
