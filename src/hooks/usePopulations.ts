@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchPopulationData } from '@/hooks/api';
 import { Prefecture } from '@/types/prefecture';
+import { Population } from '@/types/population';
 
 interface PopulationGraphData {
   year: number;
@@ -46,8 +47,26 @@ export function usePopulations(
           .filter((p): p is Prefecture => p !== undefined);
 
         const selectedCodes = selectedPrefectureObjects.map((p) => p.prefCode);
-        await fetchDataInBatches(selectedCodes);
+        const responses = await fetchDataInBatches(selectedCodes);
         if (signal.aborted) return;
+
+        const merged: { [year: number]: PopulationGraphData } = {};
+        selectedPrefectureObjects.forEach((pref, index) => {
+          const datasets = responses[index];
+          if (!datasets) return;
+          const targetDataset = datasets.find(
+            (ds: { label: string; data: Population[] }) =>
+              ds.label === selectedPattern
+          );
+          if (!targetDataset) return;
+          targetDataset.data.forEach((p: Population) => {
+            if (!merged[p.year]) {
+              merged[p.year] = { year: p.year };
+            }
+            merged[p.year][pref.prefName] = p.value;
+          });
+        });
+        setData(Object.values(merged).sort((a, b) => a.year - b.year));
       } catch (err) {
         if (signal.aborted) return;
         console.error('データの読み込み中にエラーが発生しました:', err);
