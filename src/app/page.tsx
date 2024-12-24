@@ -36,6 +36,7 @@ const Page: React.FC = () => {
       <CheckBoxs
         selectedPrefectures={selectedPrefectures}
         setSelectedPrefectures={setSelectedPrefectures}
+        prefectures={prefectures}
       />
       <ItemSection
         setSelectedPrefectures={setSelectedPrefectures}

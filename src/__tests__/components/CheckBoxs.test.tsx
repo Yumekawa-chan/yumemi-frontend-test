@@ -19,11 +19,17 @@ describe('CheckBoxs', () => {
       ],
     });
 
+    const prefectures = [
+      { prefCode: 1, prefName: '北海道' },
+      { prefCode: 2, prefName: '青森県' },
+    ];
+
     const mockSetSelectedPrefectures = jest.fn();
     render(
       <CheckBoxs
         selectedPrefectures={[]}
         setSelectedPrefectures={mockSetSelectedPrefectures}
+        prefectures={prefectures}
       />
     );
 
